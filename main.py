@@ -6,11 +6,10 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # === Настройки ===
-BOT_TOKEN = '7847097021:AAHJ3Ij4Gu12BZAkjMzSeLWyYDdkwuLf4rU'
-CHANNEL_ID = -246645098#
+CHANNEL_ID = -100246645098
 DOWNLOAD_LINK = 'https://disk.yandex.ru/i/5qJyHoKiMonmPw'
-PORT = int(os.environ.get("PORT", 8000))
 WEBHOOK_URL = f"https://blondinkaizakon-lid-f051.twc1.net/{BOT_TOKEN}"
+PORT = int(os.environ.get("PORT", 8000))
 
 SUCCESS_MESSAGE = (
     "✅ Вы подписаны!\n\n"
