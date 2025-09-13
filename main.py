@@ -6,7 +6,7 @@ from telegram.ext import ContextTypes
 
 TOKEN = '7847097021:AAHJ3Ij4Gu12BZAkjMzSeLWyYDdkwuLf4rU'
 PORT = int(os.environ.get("PORT", 8080))
-WEBHOOK_URL = f"https://your-app-112381.timeweb.app/{TOKEN}"
+WEBHOOK_URL = f"blondinkaizakon-lid-f051.twc1.net/{TOKEN}"
 
 logging.basicConfig(level=logging.INFO)
 
