@@ -8,7 +8,7 @@ BOT_TOKEN = '7847097021:AAHJ3Ij4Gu12BZAkjMzSeLWyYDdkwuLf4rU'
 CHANNEL_ID = -246645098  # 
 DOWNLOAD_LINK = 'https://disk.yandex.ru/i/5qJyHoKiMonmPw'
 PORT = int(os.environ.get("PORT", 8080))
-WEBHOOK_URL = f"https://your-app-12345.timeweb.app/{BOT_TOKEN}"
+WEBHOOK_URL = f"blondinkaizakon-lid-f051.twc1.net/{BOT_TOKEN}"
 
 SUCCESS_MESSAGE = (
     "✅ Вы подписаны!\n\n"
