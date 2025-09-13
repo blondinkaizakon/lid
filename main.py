@@ -3,6 +3,7 @@ import logging
 from telegram.ext import Application, CommandHandler
 from telegram import Update
 from telegram.ext import ContextTypes
+import asyncio
 
 TOKEN = '7847097021:AAHJ3Ij4Gu12BZAkjMzSeLWyYDdkwuLf4rU'
 PORT = int(os.environ.get("PORT", 8080))
@@ -16,10 +17,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 app = Application.builder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 
-if __name__ == '__main__':
-    app.run_webhook(
+# === Запуск через uvicorn ===
+from uvicorn import Config, Server
+
+async def run_bot():
+    await app.initialize()
+    await app.start()
+    await app.updater.start_webhook(
         listen="0.0.0.0",
         port=PORT,
         webhook_url=WEBHOOK_URL,
         url_path=TOKEN,
     )
+
+if __name__ == '__main__':
+    asyncio.run(run_bot())
