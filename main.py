@@ -10,9 +10,9 @@ import signal
 import time
 
 # === Настройки ===
-BOT_TOKEN = ''  # 
+BOT_TOKEN = '7847097021:AAHJ3Ij4Gu12BZAkjMzSeLWyYDdkwuLf4rU'# 
 CHANNEL_ID = '@petrovskajaoksana'  # ← Ваш канал
-DOWNLOAD_LINK = 'https://drive.google.com/file/d/1BGduGEC8YlxKWNMUxML74-z_mRh4zxbA/view?usp=drive_link'  # ← Ваша ссылка
+DOWNLOAD_LINK = 'https://disk.yandex.ru/i/5qJyHoKiMonmPw'  # ← Ваша ссылка
 
 # Текст сообщения
 SUCCESS_MESSAGE = (
