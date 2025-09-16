@@ -1,30 +1,23 @@
-import os
 import asyncio
-import logging
+import uvicorn
 from fastapi import FastAPI
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
+from threading import Thread
 
-# === Настройки ===
-BOT_TOKEN = '7847097021:AAHJ3Ij4Gu12BZAkjMzSeLWyYDdkwuLf4rU'
-CHANNEL_ID = 246645098
-DOWNLOAD_LINK = 'https://disk.yandex.ru/i/5qJyHoKiMonmPw'
-WEBHOOK_URL = f"https://blondinkaizakon-lid-f051.twc1.net/{BOT_TOKEN}"
-PORT = int(os.environ.get("PORT", 8000))
-
-SUCCESS_MESSAGE = (
-    "✅ Вы подписаны!\n\n"
-    "Откройте материал по ссылке:\n"
-    f"{DOWNLOAD_LINK}\n\n"
-    "👉 Скопируйте ссылку и вставьте в браузер."
-)
-
-logging.basicConfig(level=logging.INFO)
+# FastAPI приложение
 app_fastapi = FastAPI()
-app_telegram = Application.builder().token(BOT_TOKEN).build()
 
-# === Команда /start ===
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+@app_fastapi.get("/")
+def read_root():
+    return {"status": "ok"}
+
+@app_fastapi.post("/webhook")
+async def webhook(update: dict):
+    # Обработка вебхука
+    return {"ok": True}
+
+# Telegram бот
+async def start(update, context):
     keyboard = [[InlineKeyboardButton("Проверить подписку", callback_data="check_subscription")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
@@ -32,8 +25,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
-# === Проверка подписки ===
-async def check_subscription(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def check_subscription(update, context):
     query = update.callback_query
     await query.answer()
     user = query.from_user
@@ -52,28 +44,19 @@ async def check_subscription(update: Update, context: ContextTypes.DEFAULT_TYPE)
     except Exception as e:
         await query.edit_message_text("❌ Ошибка проверки подписки.")
 
-# === Telegram handlers ===
+# Инициализация Telegram бота
+app_telegram = Application.builder().token(BOT_TOKEN).build()
 app_telegram.add_handler(CommandHandler("start", start))
 app_telegram.add_handler(CallbackQueryHandler(check_subscription, pattern="check_subscription"))
 
-# === FastAPI ===
-@app_fastapi.get("/")
-def read_root():
-    return {"status": "ok"}
+# Запуск Telegram бота в отдельном потоке
+def run_telegram_bot():
+    app_telegram.run_polling()
 
-@app_fastapi.post(f"/{BOT_TOKEN}")
-async def webhook(update: dict):
-    await app_telegram.initialize()
-    await app_telegram.process_update(Update.de_json(update, app_telegram.bot))
-    return {"ok": True}
+# Запуск Telegram бота в отдельном потоке
+telegram_thread = Thread(target=run_telegram_bot)
+telegram_thread.start()
 
-# === Запуск ===
-async def run_bot():
-    await app_telegram.initialize()
-    await app_telegram.start()
-    await app_telegram.bot.set_webhook(url=WEBHOOK_URL)
-
-if __name__ == '__main__':
-    asyncio.run(run_bot())
-    import uvicorn
-    uvicorn.run(app_fastapi, host="0.0.0.0", port=PORT)
+# Запуск FastAPI приложения с помощью Uvicorn
+if __name__ == "__main__":
+    uvicorn.run(app_fastapi, host="0.0.0.0", port=8000)
